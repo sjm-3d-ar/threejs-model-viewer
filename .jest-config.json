@@ -1,0 +1,16 @@
+{
+  "verbose": true,
+  "clearMocks": true,
+  "setupFilesAfterEnv": [
+    "@testing-library/jest-dom/extend-expect"
+  ],
+  "testMatch": [
+    "<rootDir>/src/**/__tests__/**/?(*.)+(spec|test).[jt]s?(x)"
+  ],
+  "moduleNameMapper": {
+    "_common(.*)$": "<rootDir>/src/components/common/$1",
+    "_helpers(.*)$": "<rootDir>/src/helpers/$1",
+    "_utils(.*)$": "<rootDir>/src/utils/$1",
+    "_views(.*)$": "<rootDir>/src/components/views/$1"
+  }
+}

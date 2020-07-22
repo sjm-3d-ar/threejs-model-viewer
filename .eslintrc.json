@@ -1,0 +1,126 @@
+{
+  "parser": "babel-eslint",
+  "plugins": [
+    "prettier",
+    "react-hooks"
+  ],
+  "extends": [
+    "airbnb",
+    "prettier"
+  ],
+  "env": {
+    "es6": true,
+    "browser": true,
+    "jest": true
+  },
+  "globals": {
+    "alert": true,
+    "self": true,
+    "DeepAR": true
+  },
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true,
+      "spread": true,
+      "modules": true,
+      "blockBindings": true,
+      "destructuring": true,
+      "arrowFunctions": true
+    }
+  },
+  "settings": {
+    "import/resolver": {
+      "alias": [
+        [
+          "_common",
+          "./src/components/common"
+        ],
+        [
+          "_helpers",
+          "./src/helpers"
+        ],
+        [
+          "_utils",
+          "./src/utils"
+        ],
+        [
+          "_views",
+          "./src/components/views"
+        ]
+      ]
+    }
+  },
+  "rules": {
+    "semi": "error",
+    "no-alert": "off",
+    "no-console": "off",
+    "no-bitwise": "off",
+    "camelcase": "off",
+    "no-multi-spaces": [
+      "warn",
+      {
+        "ignoreEOLComments": true
+      }
+    ],
+    "quotes": [
+      "warn",
+      "double",
+      {
+        "avoidEscape": true,
+        "allowTemplateLiterals": true
+      }
+    ],
+    "no-restricted-globals": "off",
+    "no-underscore-dangle": [
+      "error",
+      {
+        "allow": [
+          "_common",
+          "_execute",
+          "_helpers",
+          "_id",
+          "_sleepForMs",
+          "_utils",
+          "_views"
+        ]
+      }
+    ],
+    "prettier/prettier": [
+      "error",
+      {
+        "arrowParens": "avoid",
+        "bracketSpacing": true,
+        "printWidth": 90,
+        "singleQuote": false,
+        "tabWidth": 2,
+        "trailingComma": "all",
+        "useTabs": false
+      }
+    ],
+    "jsx-a11y/no-static-element-interactions": "warn",
+    "jsx-a11y/anchor-is-valid": "off",
+    "jsx-a11y/accessible-emoji": "off",
+    "jsx-a11y/media-has-caption": "off",
+    "react/jsx-filename-extension": "off",
+    "react/prefer-stateless-function": "off",
+    "react/prop-types": "off",
+    "react/jsx-one-expression-per-line": "off",
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "off",
+    "react/jsx-props-no-spreading": "off",
+    "import/prefer-default-export": "off",
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": [
+          "next.config.js",
+          "**/test-utils.js",
+          "./jest.setupTests.js",
+          "./.storybook/**/*.js",
+          "**/__tests__/**/*.js"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,4 @@
+# /node_modules/* ignored by default
+
+# include storybook (do not ignore hidden directory, which is ignored by default)
+!/.storybook

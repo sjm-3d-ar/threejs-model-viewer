@@ -26,6 +26,8 @@ const ModelViewer = () => {
   const canvas = useRef();
 
   useEffect(() => {
+    const { OrbitControls } = require("three/examples/jsm/controls/OrbitControls"); // eslint-disable-line global-require
+
     const renderer = new THREE.WebGLRenderer({ canvas: canvas.current });
 
     const fov = 75;
@@ -33,7 +35,11 @@ const ModelViewer = () => {
     const near = 0.1;
     const far = 5;
     const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-    camera.position.z = 2;
+    camera.position.z = 3;
+
+    const controls = new OrbitControls(camera, canvas.current);
+    controls.target.set(0, 1, 0);
+    controls.update();
 
     const scene = new THREE.Scene();
 
@@ -42,11 +48,7 @@ const ModelViewer = () => {
     const boxDepth = 1;
     const geometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth);
 
-    const cubes = [
-      tj.meshPhongInstance(geometry, 0x44aa88, 0, scene),
-      tj.meshPhongInstance(geometry, 0x8844aa, -2, scene),
-      tj.meshPhongInstance(geometry, 0xaa8844, 2, scene),
-    ];
+    const cubes = [tj.meshPhongInstance(geometry, 0x44aa88, 0, scene)];
 
     {
       const color = 0xffffff;

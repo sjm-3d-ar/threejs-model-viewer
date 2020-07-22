@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Shapes } from "_views";
+import { ModelViewer } from "_views";
 
-const HomePage = () => <Shapes />;
+const HomePage = () => <ModelViewer />;
 
 export default HomePage;

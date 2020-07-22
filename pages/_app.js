@@ -18,7 +18,7 @@ const MyApp = ({ Component, pageProps }) => {
   return (
     <>
       <Head>
-        <title>Three.js Shapes</title>
+        <title>Three.js GLB Model Viewer</title>
       </Head>
       <ThemeProvider theme={theme}>
         <CssBaseline />

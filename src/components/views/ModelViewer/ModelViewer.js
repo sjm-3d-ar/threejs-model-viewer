@@ -20,7 +20,7 @@ const useStyles = makeStyles({
   },
 });
 
-const Shapes = () => {
+const ModelViewer = () => {
   const classes = useStyles();
 
   const canvas = useRef();
@@ -83,4 +83,4 @@ const Shapes = () => {
   return <canvas className={classes.root} ref={canvas} />;
 };
 
-export default Shapes;
+export default ModelViewer;

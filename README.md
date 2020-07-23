@@ -8,3 +8,7 @@ A simple web app to view 'glb' models using three.js.
 * other helpful tutorials...
   * especially -> https://threejsfundamentals.org/threejs/lessons/threejs-cameras.html
   * https://threejsfundamentals.org/threejs/lessons/threejs-lights.html
+
+## To Do
+* play animation (if model has it)
+  * https://discourse.threejs.org/t/animating-3d-model-that-comes-with-animation/10814/3

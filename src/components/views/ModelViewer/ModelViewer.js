@@ -30,37 +30,37 @@ const ModelViewer = () => {
 
     const renderer = new THREE.WebGLRenderer({ canvas: canvas.current });
 
-    const fov = 75;
+    const fov = 45;
     const aspect = 2; // w / h
     const near = 0.1;
-    const far = 5;
+    const far = 100;
     const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-    camera.position.z = 3;
+    camera.position.set(0, 10, 20);
 
     const controls = new OrbitControls(camera, canvas.current);
-    controls.target.set(0, 1, 0);
+    controls.target.set(0, 5, 0);
     controls.update();
 
     const scene = new THREE.Scene();
 
-    const boxWidth = 1;
-    const boxHeight = 1;
-    const boxDepth = 1;
+    const boxWidth = 4;
+    const boxHeight = 4;
+    const boxDepth = 4;
     const geometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth);
 
-    const cubes = [tj.meshPhongInstance(geometry, 0x44aa88, 0, scene)];
+    const cubes = [tj.meshPhongInstance(geometry, 0x44aa88, 0, 0, 0, scene)];
 
     {
-      const color = 0xffffff;
+      // const color = 0xffffff;
+      const skyColor = 0xb1e1ff;
+      const groundColor = 0xb97a20;
       const intensity = 1;
-      const light = new THREE.DirectionalLight(color, intensity);
+      const light = new THREE.HemisphereLight(skyColor, groundColor, intensity);
       light.position.set(-1, 2, 4);
       scene.add(light);
     }
 
-    const render = time => {
-      time *= 0.001;
-
+    const render = () => {
       // this resizing logic may not be necessary. it seemed to behave as needed without it.
       // this is possibly due to a later version of three.js? as the tutorial described
       // different behavior.
@@ -69,11 +69,6 @@ const ModelViewer = () => {
         camera.aspect = canvas.current.clientWidth / canvas.current.clientHeight;
         camera.updateProjectionMatrix();
       }
-
-      cubes.forEach(cube => {
-        cube.rotation.x = time;
-        cube.rotation.y = time;
-      });
 
       renderer.render(scene, camera);
 

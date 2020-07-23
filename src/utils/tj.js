@@ -1,10 +1,10 @@
 import * as THREE from "three";
 
-const meshPhongInstance = (geometry, color, x, scene) => {
+const meshPhongInstance = (geometry, color, x, y, z, scene) => {
   const material = new THREE.MeshPhongMaterial({ color });
 
   const mesh = new THREE.Mesh(geometry, material);
-  mesh.position.x = x;
+  mesh.position.set(x, y, z);
 
   if (scene) scene.add(mesh);
 

@@ -1,9 +1,10 @@
 /* eslint-disable no-param-reassign */
 import React, { useRef, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import { useRouter } from "next/router";
 import * as THREE from "three";
 
-import { tj } from "_utils";
+import { getRouteQuery, tj } from "_utils";
 
 const useStyles = makeStyles({
   root: {
@@ -22,12 +23,21 @@ const useStyles = makeStyles({
 
 const ModelViewer = () => {
   const classes = useStyles();
-
+  const router = useRouter();
   const canvas = useRef();
 
   useEffect(() => {
     const { OrbitControls } = require("three/examples/jsm/controls/OrbitControls"); // eslint-disable-line global-require
     const { GLTFLoader } = require("three/examples/jsm/loaders/GLTFLoader"); // eslint-disable-line global-require
+
+    console.log("router.query.modelUrl:", router.query.modelUrl);
+    console.log("window.location.search:", window.location.search);
+
+    const query = getRouteQuery(router);
+
+    const modelUrl =
+      query.modelUrl ||
+      "https://avo-content-dev.s3.amazonaws.com/campaign-manager/models/Speeder_for_dev.glb";
 
     const renderer = new THREE.WebGLRenderer({ canvas: canvas.current });
 
@@ -64,22 +74,19 @@ const ModelViewer = () => {
 
     {
       const gltfLoader = new GLTFLoader();
-      gltfLoader.load(
-        "https://avo-content-dev.s3.amazonaws.com/campaign-manager/models/Speeder_for_dev.glb",
-        gltf => {
-          const root = gltf.scene;
-          scene.add(root);
+      gltfLoader.load(modelUrl, gltf => {
+        const root = gltf.scene;
+        scene.add(root);
 
-          const box = tj.getBoxSizeCenter(root);
+        const box = tj.getBoxSizeCenter(root);
 
-          tj.moveCamera(box.size * 0.5, box.size, box.center, camera);
+        tj.moveCamera(box.size * 0.5, box.size, box.center, camera);
 
-          // move the controls based on model size
-          controls.maxDistance = box.size * 10;
-          controls.target.copy(box.center);
-          controls.update();
-        },
-      );
+        // move the controls based on model size
+        controls.maxDistance = box.size * 10;
+        controls.target.copy(box.center);
+        controls.update();
+      });
     }
 
     const render = () => {

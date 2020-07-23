@@ -1,2 +1,3 @@
 export { default as tj } from "./tj";
-export { useWindowDimensions } from "./window";
+export { queryStringToObject } from "./strings";
+export { getRouteQuery, useWindowDimensions } from "./window";

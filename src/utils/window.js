@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 
+import { queryStringToObject } from "_utils";
+
 const getWindowDimensions = () =>
   // check for existence of window first to account for SSR
   process.browser
@@ -28,4 +30,12 @@ export const useWindowDimensions = () => {
   }, []);
 
   return windowDimensions;
+};
+
+export const getRouteQuery = router => {
+  const windowQuery = queryStringToObject(window.location.search);
+
+  const hasRouterQuery = router && Object.values(router.query).length;
+
+  return hasRouterQuery ? router.query : windowQuery;
 };

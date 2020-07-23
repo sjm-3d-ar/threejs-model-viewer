@@ -1,9 +1,10 @@
 /* eslint-disable no-param-reassign */
 import React, { useRef, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import { useRouter } from "next/router";
 import * as THREE from "three";
 
-import { tj } from "_utils";
+import { getRouteQuery, tj } from "_utils";
 
 const useStyles = makeStyles({
   root: {
@@ -22,43 +23,73 @@ const useStyles = makeStyles({
 
 const ModelViewer = () => {
   const classes = useStyles();
-
+  const router = useRouter();
   const canvas = useRef();
 
   useEffect(() => {
+    const { OrbitControls } = require("three/examples/jsm/controls/OrbitControls"); // eslint-disable-line global-require
+    const { GLTFLoader } = require("three/examples/jsm/loaders/GLTFLoader"); // eslint-disable-line global-require
+
+    console.log("router.query.modelUrl:", router.query.modelUrl);
+    console.log("window.location.search:", window.location.search);
+
+    const query = getRouteQuery(router);
+
+    const modelUrl =
+      query.modelUrl ||
+      "https://avo-content-dev.s3.amazonaws.com/campaign-manager/models/Speeder_for_dev.glb";
+
     const renderer = new THREE.WebGLRenderer({ canvas: canvas.current });
 
-    const fov = 75;
+    const fov = 45;
     const aspect = 2; // w / h
     const near = 0.1;
-    const far = 5;
+    const far = 1000;
     const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-    camera.position.z = 2;
+    camera.position.set(0, 10, 20);
+
+    const controls = new OrbitControls(camera, canvas.current);
+    controls.target.set(0, 5, 0);
+    controls.update();
 
     const scene = new THREE.Scene();
 
-    const boxWidth = 1;
-    const boxHeight = 1;
-    const boxDepth = 1;
-    const geometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth);
-
-    const cubes = [
-      tj.meshPhongInstance(geometry, 0x44aa88, 0, scene),
-      tj.meshPhongInstance(geometry, 0x8844aa, -2, scene),
-      tj.meshPhongInstance(geometry, 0xaa8844, 2, scene),
-    ];
-
+    // add a HemisphereLight
     {
-      const color = 0xffffff;
+      const skyColor = 0xb1e1ff;
+      const groundColor = 0xb97a20;
       const intensity = 1;
-      const light = new THREE.DirectionalLight(color, intensity);
-      light.position.set(-1, 2, 4);
+      const light = new THREE.HemisphereLight(skyColor, groundColor, intensity);
       scene.add(light);
     }
 
-    const render = time => {
-      time *= 0.001;
+    // also add a DirectionalLight
+    {
+      const color = 0xffffff;
+      const intensity = 1;
+      const light = new THREE.HemisphereLight(color, intensity);
+      light.position.set(5, 10, 2);
+      scene.add(light);
+    }
 
+    {
+      const gltfLoader = new GLTFLoader();
+      gltfLoader.load(modelUrl, gltf => {
+        const root = gltf.scene;
+        scene.add(root);
+
+        const box = tj.getBoxSizeCenter(root);
+
+        tj.moveCamera(box.size * 0.5, box.size, box.center, camera);
+
+        // move the controls based on model size
+        controls.maxDistance = box.size * 10;
+        controls.target.copy(box.center);
+        controls.update();
+      });
+    }
+
+    const render = () => {
       // this resizing logic may not be necessary. it seemed to behave as needed without it.
       // this is possibly due to a later version of three.js? as the tutorial described
       // different behavior.
@@ -68,15 +99,11 @@ const ModelViewer = () => {
         camera.updateProjectionMatrix();
       }
 
-      cubes.forEach(cube => {
-        cube.rotation.x = time;
-        cube.rotation.y = time;
-      });
-
       renderer.render(scene, camera);
 
       requestAnimationFrame(render);
     };
+
     requestAnimationFrame(render);
   }, []);
 

@@ -34,7 +34,8 @@ const moveCamera = (sizeToFitOnScreen, boxSize, boxCenter, camera) => {
 
   // move the camera to a position distance units way from the center
   // in whatever direction the camera was from the center already
-  camera.position.copy(direction.multiplyScalar(distance).add(boxCenter));
+  // NOTE: I added the '+ 3', just to provide a little more distance
+  camera.position.copy(direction.multiplyScalar(distance + 3).add(boxCenter));
 
   // pick some near and far values for the frustum that
   // will contain the box.
@@ -47,7 +48,7 @@ const moveCamera = (sizeToFitOnScreen, boxSize, boxCenter, camera) => {
   camera.lookAt(boxCenter.x, boxCenter.y, boxCenter.z);
 };
 
-// this resizing logic may not be necessary. it seemed to behave as needed without it.
+// this resizing logic 'may' not be necessary. it seemed to behave as needed without it.
 // this is possibly due to a later version of three.js? as the tutorial described
 // different behavior.
 const resizeRendererToDisplaySize = renderer => {

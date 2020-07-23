@@ -27,12 +27,13 @@ const ModelViewer = () => {
 
   useEffect(() => {
     const { OrbitControls } = require("three/examples/jsm/controls/OrbitControls"); // eslint-disable-line global-require
+    const { GLTFLoader } = require("three/examples/jsm/loaders/GLTFLoader"); // eslint-disable-line global-require
 
     const renderer = new THREE.WebGLRenderer({ canvas: canvas.current });
 
     const fov = 45;
     const aspect = 2; // w / h
-    const near = 1;
+    const near = 0.1;
     const far = 1000;
     const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
     camera.position.set(0, 10, 20);
@@ -43,21 +44,42 @@ const ModelViewer = () => {
 
     const scene = new THREE.Scene();
 
-    const boxWidth = 4;
-    const boxHeight = 4;
-    const boxDepth = 4;
-    const geometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth);
-
-    const cubes = [tj.meshPhongInstance(geometry, 0x44aa88, 0, 0, 0, scene)];
-
+    // add a HemisphereLight
     {
-      // const color = 0xffffff;
       const skyColor = 0xb1e1ff;
       const groundColor = 0xb97a20;
       const intensity = 1;
       const light = new THREE.HemisphereLight(skyColor, groundColor, intensity);
-      light.position.set(-1, 2, 4);
       scene.add(light);
+    }
+
+    // also add a DirectionalLight
+    {
+      const color = 0xffffff;
+      const intensity = 1;
+      const light = new THREE.HemisphereLight(color, intensity);
+      light.position.set(5, 10, 2);
+      scene.add(light);
+    }
+
+    {
+      const gltfLoader = new GLTFLoader();
+      gltfLoader.load(
+        "https://avo-content-dev.s3.amazonaws.com/campaign-manager/models/Speeder_for_dev.glb",
+        gltf => {
+          const root = gltf.scene;
+          scene.add(root);
+
+          const box = tj.getBoxSizeCenter(root);
+
+          tj.moveCamera(box.size * 0.5, box.size, box.center, camera);
+
+          // move the controls based on model size
+          controls.maxDistance = box.size * 10;
+          controls.target.copy(box.center);
+          controls.update();
+        },
+      );
     }
 
     const render = () => {
@@ -74,6 +96,7 @@ const ModelViewer = () => {
 
       requestAnimationFrame(render);
     };
+
     requestAnimationFrame(render);
   }, []);
 
